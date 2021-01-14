@@ -6,8 +6,8 @@ var svgHeight = 500;
 var margin = {
   top: 20,
   right: 40,
-  bottom: 80,
-  left: 100
+  bottom: 160,
+  left: 500
 };
 
 var width = svgWidth - margin.left - margin.right;
@@ -32,7 +32,7 @@ d3.select(".chart").append("div").attr("class", "tooltip").style("opacity", 0);
 // Step 3:
 // Import data from the csv file
 // =================================
-d3.csv("data/data.csv").then(function(projectData) {
+d3.csv("assets/data/data.csv").then(function(projectData) {
 
   // Step 4: Format the data
   // =================================
@@ -40,18 +40,20 @@ d3.csv("data/data.csv").then(function(projectData) {
     data.poverty= +data.poverty;
     data.obesity= +data.obesity;
 
-    console.log(data);
+    //console.log(data);
   });
 
   // Step 5: Create Scales
   //= ============================================
   var xScale = d3.scaleLinear()
     .domain([0, d3.max(projectData, d => d.poverty)])
-    .range([0, width]);
+    .range([0, width])
+    .nice();
 
   var yScale = d3.scaleLinear()
     .domain([0, d3.max(projectData, d => d.obesity)])
-    .range([height, 0]);
+    .range([height, 0])
+    .nice();
 
   // Step 6: Create Axes
   // =============================================
@@ -61,6 +63,7 @@ d3.csv("data/data.csv").then(function(projectData) {
 
   // Step 7: Append the axes to the chartGroup
   // ==============================================
+
   // Add bottomAxis
   chartGroup.append("g").attr("transform", `translate(0, ${height})`).call(bottomAxis);
 
@@ -100,25 +103,25 @@ chartGroup.append("g")
   .attr("alignment-baseline", "central");
   
 
- // Step 10: Add state abbreviations to each plot point
+ // Step 10: Add axis labels
  //===================================================
   chartGroup.append("text")
-    .attr("transform", `translate(${width / 2}, ${height + margin.top + 13})`)
+    .attr("transform", `translate(${width / 2}, ${height + margin.top + 40})`)
     .attr("text-anchor", "middle")
     .attr("font-size", "16px")
     .attr("fill", "black")
     .style("font-weight", "bold")
-    .text("Median Age");
+    .text("In Poverty (%)");
 
     chartGroup.append("text")
-    .attr("y", 0 - ((margin.left / 2) + 2))
+    .attr("y", 0 - ((margin.left / 2) - 200))
     .attr("x", 0 - (height / 2))
     .attr("text-anchor", "middle")
     .attr("font-size", "16px")
     .attr("fill", "black")
     .style("font-weight", "bold")
     .attr("transform", "rotate(-90)")
-    .text("Smokers (%)");
+    .text("Obesity (%)");
 
 }).catch(function(error) {
   console.log(error);
